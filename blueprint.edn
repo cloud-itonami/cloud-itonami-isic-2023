@@ -1,0 +1,38 @@
+{:itonami.blueprint/id "cloud-itonami-isic-2023"
+ :itonami.blueprint/name "Manufacture of soap and detergents, cleaning and polishing preparations, perfumes and toilet preparations"
+ :itonami.blueprint/isic-rev5 "2023"
+ :itonami.blueprint/domain :soap-detergent-cosmetics/manufacturing
+ :itonami.blueprint/license "AGPL-3.0-or-later"
+ :itonami.blueprint/social-impact [:worker-safety :consumer-safety :materials-safety]
+ :itonami.blueprint/governor :soap-detergent-plant-operations-governor
+ :itonami.blueprint/robotics true
+ :itonami.blueprint/required-technologies [:robotics :identity :forms :dmn :bpmn :audit-ledger :cae :cfd]
+ :itonami.blueprint/optional-technologies []
+ :itonami.blueprint/status :public-oss
+ :itonami.blueprint/maturity :implemented
+ :itonami.blueprint/implemented-slice
+ "SoapAdvisor ⊣ Soap & Detergent Plant Operations Governor, langgraph-clj
+ StateGraph, append-only audit ledger. A plant OPERATIONS COORDINATION
+ actor for soap-and-detergent, cleaning-and-polishing-preparation,
+ perfume, and toilet-preparation (cosmetics) manufacturing
+ (saponification/mixing/formulation kettles and filling lines producing
+ bar/liquid soap, detergents, household/industrial cleaners, polishes,
+ perfumes and cosmetic toilet preparations) -- not direct saponification/
+ formulation/filling-line-equipment control authority. Four ops
+ (`:log-production-batch` / `:schedule-maintenance` /
+ `:flag-safety-concern` / `:coordinate-shipment`), all `:effect
+ :propose` only. Eleven concrete governor checks elaborate this
+ blueprint's four HARD invariants: propose-only effect, closed op
+ allowlist, closed proposal-effect allowlist (no direct formulation/
+ filling-line-equipment control), permanent line-actuate block,
+ independent equipment verification/registration before maintenance
+ scheduling, independent batch verification/registration before
+ shipment coordination, independent shipment-weight recompute against
+ the batch's own logged weight, double-schedule guard, product-type
+ validation, off-spec-rate plausibility validation, and fragrance-
+ allergen-labeling completeness validation (EU Regulation (EC) No
+ 1223/2009 Annex III designated-allergen disclosure). Safety-concern
+ flagging (chemical-hazard/allergen-labeling/microbial-contamination)
+ ALWAYS escalates to a human plant supervisor; `:log-production-batch`
+ is the only op eligible to auto-commit, and only at phase 3 when
+ governor-clean."}
