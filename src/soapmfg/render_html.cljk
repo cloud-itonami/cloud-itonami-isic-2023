@@ -29,7 +29,7 @@
   page that lies about the governor, so it is a build failure rather
   than a convention.
 
-  Usage: `clojure -M:dev:render-html [out-file]`
+  Usage: `kbb -M:dev:render-html [out-file]`
   (default `docs/samples/operator-console.html`)."
   (:require [kotoba.lang.text :as str]
             [jp-go-dds.skin]
@@ -348,7 +348,7 @@
 
      "  <section class=\"card\">\n"
      "    <h2>この実行の要約</h2>\n"
-     "    <p>この頁は <code>clojure -M:dev:render-html</code> がビルド時に、実際の "
+     "    <p>この頁は <code>kbb -M:dev:render-html</code> がビルド時に、実際の "
      "<code>soapmfg.operation</code> StateGraph を <code>langgraph.graph/run*</code> で "
      (count runs) " 回走らせて生成したものです。数値・id・判定・理由はすべて実行結果であり、"
      "手書きの文字列ではありません。</p>\n"
@@ -422,7 +422,7 @@
 
      "</main>\n"
      "<footer>\n"
-     "  <p class=\"muted\">生成: <code>soapmfg.render-html</code> (<code>clojure -M:dev:render-html</code>)。"
+     "  <p class=\"muted\">生成: <code>soapmfg.render-html</code> (<code>kbb -M:dev:render-html</code>)。"
      "決定的 — 同じ seed からの再実行はバイト単位で同一です。時刻はページ本文に一切含まれません。</p>\n"
      "</footer>\n"
      "</body></html>\n")))
