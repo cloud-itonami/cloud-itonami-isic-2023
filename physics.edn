@@ -1,0 +1,43 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:dev:physics` runs it.
+;;
+;; The README has no "Robotics premise" section; its Scope names the plant
+;; this actor coordinates (ISIC 2023): saponification/mixing/formulation
+;; kettles and the filling line for soap, detergents, cleaning preparations
+;; and perfumes/toilet preparations. The physical work of that plant taken
+;; here: cooling cast soap bars in their moulds before demoulding, emptying
+;; the formulation kettle to the filling buffer, and packing filled cases of
+;; liquid detergent.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isic-2023"
+ :cases
+ [{:id :cast-bar-cooling
+   :kind :thermal
+   :procedure "cast soap poured at 70 C cools in its mould under 20 C forced air until the bar's centre falls below 35 C for demoulding (half thickness, centre adiabatic)"
+   :params {:thickness-m 0.015 :conductivity-w-mk 0.3 :density-kg-m3 1050.0 :specific-heat-j-kgk 2300.0
+            :t0-c 70.0 :t-hot-c 20.0 :h-front-w-m2k 25.0 :h-back-w-m2k 0.0
+            :threshold-c 35.0 :threshold-direction :falling :duration-s 14400.0 :nodes 11}
+   :sweep {:param :thickness-m :values [0.008 0.012 0.015 0.02 0.025]}
+   :quantity :time-to-threshold-s
+   :limit {:max 3600.0 :basis "estimate: moulds must turn round within one hour for the casting line to keep pace"}
+   :boundary {:lo 0.004 :hi 0.05}}
+  {:id :kettle-to-filling-buffer
+   :kind :tank-drain
+   :procedure "robot opens the formulation kettle's bottom valve to empty a liquid-detergent batch (1.8 m) to a 0.05 m heel into the filling buffer"
+   :params {:tank-area-m2 4.0 :h0-m 1.8 :h-target-m 0.05 :cd 0.62 :dt-s 0.5 :max-time-s 14400.0}
+   :sweep {:param :orifice-area-m2 :values [0.001 0.002 0.003 0.005 0.008]}
+   :quantity :time-to-target-s
+   :limit {:max 1800.0 :basis "estimate: a 30-minute transfer slot between making and the next batch"}
+   :boundary {:lo 0.0005 :hi 0.02}}
+  {:id :detergent-case-packing
+   :kind :manipulator
+   :procedure "arm lifts a packed case of liquid-detergent bottles from the case sealer onto the pallet"
+   :params {:l1-m 0.60 :l2-m 0.50 :m1-kg 9.0 :m2-kg 6.0
+            :from [0.75 0.15] :to [0.35 0.75] :duration-s 2.5 :steps 500}
+   :sweep {:param :payload-kg :values [4.0 8.0 12.0 16.0 20.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 300.0 :basis "estimate: continuous shoulder torque of a ~25 kg-payload palletising arm class"}
+   :boundary {:lo 1.0 :hi 80.0}}]}
